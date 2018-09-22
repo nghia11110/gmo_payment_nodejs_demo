@@ -1,12 +1,12 @@
 {
-  "name": "universal-react-redux",
-  "description": "Universal React/Redux boilerplate with sensible defaults.",
+  "name": "gmo-payment-nodejs",
+  "description": "",
   "version": "7.0.0",
   "license": "MIT",
   "main": "client/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/combine/universal-react-redux.git"
+    "url": "https://github.com/nghia11110/gmo_payment_nodejs_demo.git"
   },
   "engines": {
     "node": "8.x.x",
