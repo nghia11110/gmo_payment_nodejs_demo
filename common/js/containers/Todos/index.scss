@@ -1,0 +1,11 @@
+.todoForm {
+  width: 300px;
+  margin: 10px 0 0;
+  display: flex;
+
+  input, button {
+    padding: 5px 3px;
+  }
+
+  input { flex: 1; }
+}

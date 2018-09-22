@@ -1,0 +1,213 @@
+{
+  "name": "universal-react-redux",
+  "description": "Universal React/Redux boilerplate with sensible defaults.",
+  "version": "7.0.0",
+  "license": "MIT",
+  "main": "client/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/combine/universal-react-redux.git"
+  },
+  "engines": {
+    "node": "8.x.x",
+    "npm": "5.2.x"
+  },
+  "_moduleAliases": {
+    "@css": "common/css",
+    "@fonts": "common/fonts",
+    "@images": "common/images",
+    "@actions": "common/js/actions",
+    "@components": "common/js/components",
+    "@constants": "common/js/constants",
+    "@containers": "common/js/containers",
+    "@lib": "common/js/lib",
+    "@middleware": "common/js/middleware",
+    "@pages": "common/js/pages",
+    "@reducers": "common/js/reducers",
+    "@routes": "common/js/routes",
+    "@store": "common/js/store",
+    "@templates": "server/templates",
+    "@config": "config",
+    "$api": "server/api",
+    "$lib": "server/lib",
+    "$middleware": "server/middleware"
+  },
+  "scripts": {
+    "start": "better-npm-run dev:start",
+    "prod": "better-npm-run prod:build && better-npm-run serve",
+    "serve": "better-npm-run serve",
+    "dev:start": "better-npm-run dev:start",
+    "dev:start:server": "better-npm-run dev:start:server",
+    "dev:start:client": "better-npm-run dev:start:client",
+    "prod:build": "better-npm-run prod:build",
+    "prod:build:client": "better-npm-run prod:build:client",
+    "prod:build:ssr": "better-npm-run prod:build:ssr",
+    "prod:build:server": "better-npm-run prod:build:server",
+    "test": "better-npm-run test",
+    "test:all": "better-npm-run test:all",
+    "test:watch": "better-npm-run test:watch",
+    "test:all:watch": "better-npm-run test:all:watch",
+    "lint": "better-npm-run lint",
+    "heroku-postbuild": "better-npm-run prod:build"
+  },
+  "betterScripts": {
+    "serve": {
+      "command": "node ./dist/index.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "dev:start": "npm run dev:start:client & npm run dev:start:server",
+    "dev:start:server": {
+      "command": "$(npm bin)/node-dev server",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "dev:start:client": {
+      "command": "npx babel-node webpack/development.client.babel",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "prod:build": {
+      "command": "npm run prod:build:client && npm run prod:build:ssr && npm run prod:build:server",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "prod:build:client": {
+      "command": "$(npm bin)/webpack --config webpack/production.client.babel.js --progress",
+      "env": {
+        "NODE_ENV": "production",
+        "PUBLIC_ASSET_PATH": "/assets/"
+      }
+    },
+    "prod:build:ssr": {
+      "command": "$(npm bin)/webpack --config webpack/production.ssr.babel.js --progress",
+      "env": {
+        "NODE_ENV": "production",
+        "SSR": true
+      }
+    },
+    "prod:build:server": {
+      "command": "npx babel ./server -d ./dist --ignore '**/*.test.js,renderer/handler.js'",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "test": {
+      "command": "$(npm bin)/jest -c ./test/support/jest.config.js",
+      "env": {
+        "NODE_ENV": "test"
+      }
+    },
+    "test:watch": {
+      "command": "npm run test -- --watch",
+      "env": {
+        "NODE_ENV": "test"
+      }
+    },
+    "lint": {
+      "command": "$(npm bin)/eslint --ext .js,.jsx .",
+      "env": {
+        "NODE_ENV": "test"
+      }
+    }
+  },
+  "devDependencies": {
+    "autoprefixer": "^8.2.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-dynamic-import-node": "^1.2.0",
+    "babel-plugin-lodash": "^3.3.2",
+    "babel-plugin-react-transform": "^3.0.0",
+    "babel-plugin-syntax-class-properties": "^6.13.0",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "better-npm-run": "^0.1.0",
+    "compression-webpack-plugin": "^1.1.11",
+    "css-hot-loader": "^1.3.9",
+    "css-loader": "^0.28.11",
+    "debug": "^3.1.0",
+    "dotenv": "^5.0.1",
+    "dotenv-safe": "^5.0.1",
+    "dotenv-webpack": "^1.5.5",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-to-json": "^3.3.3",
+    "eslint": "^4.19.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-babel": "^5.0.0",
+    "eslint-plugin-react": "^7.7.0",
+    "expose-loader": "^0.7.5",
+    "extract-text-webpack-plugin": "^4.0.0-alpha.0",
+    "file-loader": "^1.1.11",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^22.4.3",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-dev": "^3.1.3",
+    "node-sass": "^4.8.3",
+    "postcss-csso": "^3.0.0",
+    "postcss-loader": "^2.1.3",
+    "prettier-eslint": "^8.8.1",
+    "react-hot-loader": "^4.0.1",
+    "react-transform-catch-errors": "^1.0.2",
+    "redbox-react": "^1.5.0",
+    "redux-logger": "^3.0.6",
+    "resolve-url-loader": "^2.3.0",
+    "sass-loader": "^6.0.7",
+    "sass-resources-loader": "^1.3.3",
+    "style-loader": "^0.20.3",
+    "supertest": "^3.0.0",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.5.0",
+    "webpack-bundle-analyzer": "^2.11.1",
+    "webpack-cli": "^2.0.14",
+    "webpack-dev-server": "^3.1.3",
+    "webpack-isomorphic-tools": "^3.0.5",
+    "webpack-merge": "^4.1.2",
+    "webpack-node-externals": "^1.7.2",
+    "webpack-sources": "^1.1.0",
+    "yn": "^2.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
+    "chokidar": "^2.0.3",
+    "classnames": "^2.2.5",
+    "compression": "^1.7.2",
+    "cookie-parser": "^1.4.3",
+    "css-modules-require-hook": "^4.2.3",
+    "express": "^4.16.3",
+    "font-awesome": "^4.7.0",
+    "helmet": "^3.12.0",
+    "history": "^4.7.2",
+    "include-media": "^1.4.9",
+    "lodash": "^4.17.5",
+    "module-alias": "^2.0.6",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "react-helmet": "^5.2.0",
+    "react-loadable": "^5.3.1",
+    "react-redux": "^5.0.7",
+    "react-responsive-redux": "^0.5.0",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "semantic-ui-css": "^2.3.1",
+    "semantic-ui-react": "^0.79.1",
+    "serve-static": "^1.13.2"
+  }
+}
