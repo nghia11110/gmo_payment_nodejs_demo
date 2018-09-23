@@ -19,6 +19,7 @@ export default function render(html, initialState = {}, bundles = []) {
   const vendorCss = assets.styles.vendor;
   const chunkCss = bundles.filter(bundle => bundle.file.match(/.css/));
   const chunkJs = bundles.filter(bundle => bundle.file.match(/.js/));
+  const paymentSource = env === 'production' ? 'https://p01.mul-pay.jp/ext/js/token.js' : 'https://pt01.mul-pay.jp/ext/js/token.js';
 
   return compile({
     html,
@@ -29,6 +30,7 @@ export default function render(html, initialState = {}, bundles = []) {
     vendorCss,
     chunkCss,
     chunkJs,
-    initialState
+    initialState,
+    paymentSource
   });
 }

@@ -26,6 +26,7 @@
     "@reducers": "common/js/reducers",
     "@routes": "common/js/routes",
     "@store": "common/js/store",
+    "@utils": "common/js/utils",
     "@templates": "server/templates",
     "@config": "config",
     "$api": "server/api",

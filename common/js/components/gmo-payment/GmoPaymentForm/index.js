@@ -5,6 +5,12 @@ import {
 import styled from 'styled-components';
 import CreditField from '@components/common/CreditField';
 import { Button } from 'semantic-ui-react';
+import gmoConfig from '@utils/gmo/config';
+
+const {
+  SHOP_CONFIG,
+  // SITE_CONFIG,
+} = gmoConfig;
 
 const Center = styled.div`
   display: flex;
@@ -18,6 +24,7 @@ const FIELD_NAMES = {
   expireYear: 'expire_year',
   securityCode: 'security_code',
 };
+
 const VALIDATIONS = [{
   key: 'card_number',
   error: 'カード番号を入力してください',
@@ -83,7 +90,6 @@ export default withFormik({
     return obj;
   },
   handleSubmit: (values, { props, setFieldError, setErrors }) => {
-    console.log(values);
     const params = {
       cardno: values[FIELD_NAMES.cardNumber],
       expire: `20${values[FIELD_NAMES.expireYear]}${values[FIELD_NAMES.expireMonth]}`,
@@ -106,11 +112,12 @@ export default withFormik({
       });
       if (isNG) return false;
       values.token = tokenGmo;
-      props.charge(values);
+      console.log(values);
+      // props.charge(values);
     }
     const funcName = getTokenCallback.name;
     window[funcName] = getTokenCallback;
-    // Multipayment.init($ac.CONFIG.GMO_SHOP_ID);
-    // Multipayment.getToken(params, getTokenCallback);
+    Multipayment.init(SHOP_CONFIG.id);
+    Multipayment.getToken(params, getTokenCallback);
   }
 })(GmoPaymentForm);

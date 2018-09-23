@@ -20,5 +20,6 @@
     return `<script src="${process.env.PUBLIC_ASSET_PATH}${bundle.file}"></script>`
   }).join('\n') %>
   <script>window.main();</script>
+  <script src="${paymentSource}"></script>
 </body>
 </html>
