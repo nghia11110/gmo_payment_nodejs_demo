@@ -4,6 +4,11 @@
       "id": "tshop00035429",
       "host": "kt01.mul-pay.jp",
       "password": "2wtcd2wn"
+    },
+    "production": {
+      "id": "",
+      "host": "",
+      "password": ""
     }
   },
   "SITE_CONFIG": {
@@ -11,6 +16,11 @@
       "id": "tsite00031571",
       "host": "kt01.mul-pay.jp",
       "password": "qeuuk4qb"
+    },
+    "production": {
+      "id": "",
+      "host": "",
+      "password": ""
     }
   }
 }
