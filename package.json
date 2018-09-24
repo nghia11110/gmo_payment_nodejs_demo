@@ -197,7 +197,6 @@
     "formik": "^1.3.0",
     "helmet": "^3.12.0",
     "history": "^4.7.2",
-    "gmo": "git+https://github.com/t-k/gmo-payment-node.git",
     "include-media": "^1.4.9",
     "lodash": "^4.17.5",
     "module-alias": "^2.0.6",
