@@ -10,6 +10,7 @@ export const refundAction = generateActionCreator(REFUND, 'id');
 
 export const charge = (params) => {
   return dispatch => {
+    console.log(params);
     return api
       .post('/api/gmo-payment/charge', { params })
       .then(orderId => {

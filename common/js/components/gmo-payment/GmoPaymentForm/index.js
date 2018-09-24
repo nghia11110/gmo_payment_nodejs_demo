@@ -3,8 +3,11 @@ import {
   withFormik,
 } from 'formik';
 import styled from 'styled-components';
-import CreditField from '@components/common/CreditField';
 import { Button } from 'semantic-ui-react';
+import CreditField from '@components/common/CreditField';
+import TextInput from '@components/common/TextInput';
+import FieldContainer from '@components/common/FieldContainer';
+import QuestionTitle from '@components/common/QuestionTitle';
 import gmoConfig from '@utils/gmo/config';
 
 const {
@@ -18,7 +21,23 @@ const Center = styled.div`
   justify-content: center;
 `;
 
+const DivContainer = styled.div`
+  width: 100%;
+  display: flex;
+  * {
+    :first-child {
+      margin-right: 5px;
+    }
+    :last-child {
+      margin-left: 5px;
+    }
+  }
+`;
+
 const FIELD_NAMES = {
+  memberId: 'member_id',
+  memberName: 'member_name',
+  price: 'price',
   cardNumber: 'card_number',
   expireMonth: 'expire_month',
   expireYear: 'expire_year',
@@ -26,6 +45,15 @@ const FIELD_NAMES = {
 };
 
 const VALIDATIONS = [{
+  key: 'member_id',
+  error: 'member_idを入力してください',
+},{
+  key: 'member_name',
+  error: 'member_nameを入力してください',
+},{
+  key: 'price',
+  error: '価格を入力してください',
+},{
   key: 'card_number',
   error: 'カード番号を入力してください',
 }, {
@@ -50,8 +78,43 @@ const GmoPaymentForm = (props) => {
   const errorLength = Object.keys(errors).length;
   return (
     <form onSubmit={handleSubmit}>
-      
-        決済情報を入力してください。
+      決済情報を入力してください。
+      <FieldContainer>
+        <QuestionTitle isRequire noQuestion isCenter>
+          Member_Id
+        </QuestionTitle>
+        <DivContainer>
+          <TextInput
+            onChange={handleChange}
+            name={FIELD_NAMES.memberId}
+            id={FIELD_NAMES.memberId}
+          />
+        </DivContainer>
+      </FieldContainer>
+      <FieldContainer>
+        <QuestionTitle isRequire noQuestion isCenter>
+          Member_Name
+        </QuestionTitle>
+        <DivContainer>
+          <TextInput
+            onChange={handleChange}
+            name={FIELD_NAMES.memberName}
+            id={FIELD_NAMES.memberName}
+          />
+        </DivContainer>
+      </FieldContainer>
+      <FieldContainer>
+        <QuestionTitle isRequire noQuestion isCenter>
+          Price
+        </QuestionTitle>
+        <DivContainer>
+          <TextInput
+            onChange={handleChange}
+            name={FIELD_NAMES.price}
+            id={FIELD_NAMES.price}
+          />
+        </DivContainer>
+      </FieldContainer>
       <CreditField
         numberName={FIELD_NAMES.cardNumber}
         monthName={FIELD_NAMES.expireMonth}
@@ -112,8 +175,7 @@ export default withFormik({
       });
       if (isNG) return false;
       values.token = tokenGmo;
-      console.log(values);
-      // props.charge(values);
+      props.charge(values);
     }
     const funcName = getTokenCallback.name;
     window[funcName] = getTokenCallback;
