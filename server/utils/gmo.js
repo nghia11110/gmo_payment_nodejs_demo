@@ -1,4 +1,3 @@
-/* eslint arrow-body-style: off */
 import gmo from 'gmo';
 import co from 'co';
 import Q from 'q';
