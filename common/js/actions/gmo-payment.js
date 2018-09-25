@@ -13,12 +13,14 @@ export const charge = (params) => {
     return api
       .post('/api/gmo-payment/charge', { params })
       .then(orderId => {
+        alert(`Purchase success with orderId: ${orderId}`);
         dispatch(chargeAction(orderId));
 
         return Promise.resolve(orderId);
       })
       .catch(error => {
-        return Promise.reject(error);
+        alert(error);
+        return Promise.resolve(error);
       });
   };
 };
