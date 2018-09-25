@@ -1,6 +1,6 @@
 {
   "name": "gmo-payment-nodejs",
-  "description": "",
+  "description": "implement gmo-payment by nodejs",
   "version": "7.0.0",
   "license": "MIT",
   "main": "client/index.js",

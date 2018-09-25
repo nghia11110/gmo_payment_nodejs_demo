@@ -135,7 +135,7 @@ const GmoPaymentForm = (props) => {
       <Center>
         <Button
           type="submit"
-          content="Charge"
+          content="Purchase"
           active
         />
       </Center>

@@ -1,37 +1,7 @@
-# Universal React Redux Boilerplate
+# Demo gmo-payment with credit card
 
-A universal React/Redux boilerplate with sensible defaults. Out of the box, this
-boilerplate comes with:
-
-- Server-side rendering with Express
-- Code splitting with [dynamic imports](https://webpack.js.org/guides/code-splitting/#dynamic-imports) and [react-loadable](https://github.com/thejameskyle/react-loadable)
-- Sane [webpack configurations](webpack/)
-- JS hot reloading with [react-hot-loader (@next)](https://github.com/gaearon/react-hot-loader) and [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
-- CSS, SASS and [css-modules](https://github.com/css-modules/css-modules) support with hot reloading and no [flash of unstyled content](https://en.wikipedia.org/wiki/Flash_of_unstyled_content) ([css-hot-loader](https://github.com/shepherdwind/css-hot-loader))
-- Routing with [react-router-v4](https://github.com/ReactTraining/react-router)
-- Full production builds that do not rely on `babel-node`.
-- Pre-configured testing tools with `jest` and `enzyme` to work with css modules, static files, and aliased module paths.
-
-## Philosophy
-
-The JavaScript ecosystem is brimming with open source libraries. With advances
-in ES6 and commitments by the big tech companies to invest in JavaScript, the
-last several years have arguably turned web development into what was once a
-huge pain in the ass, to a pretty decently enjoyable experience.
-
-With so many different packages now available, we now have the freedom and the
-choice to craft applications to our exact specifications, reducing bloat and
-minimizing the number of code we need to support cross-platform apps. It really
-is a new world.
-
-However, with so many different developers working on different libraries,
-things are constantly in flux, and breaking changes are often introduced. It can
-be hard to keep up with the latest and greatest since they're always changing.
-
-To help alleviate this, we've collected some of the best practices and features
-from the React ecosystem and put them in one place. Although this boilerplate is
-fully production-capable as is, its main goal is to serve as an example of how
-to bring an application together using the latest tools in the ecosystem.
+- Client side by react/redux/webpack
+- Server side by nodejs (express)
 
 ## Development Mode
 
@@ -50,202 +20,245 @@ npm start
 
 Direct your browser to `http://localhost:3000`.
 
-## Production Builds
+## Giới thiệu
+GMO là cổng dịch vụ thanh toán lón của Nhật, hỗ trợ nhiều hình thức thanh toán (credit card, multipayment như pay-easy, convenience-store ...)
+Về lí thuyết có thể tham khảo thêm ở https://viblo.asia/p/tim-hieu-ve-cong-thanh-toan-gmo-3P0lPvMpKox để hiểu rõ hơn cơ chế hoạt động của payment platform.
 
-Add environment variables the way you normally would on your production system.
+Repo này sẽ hướng dẫn cách implement sample hệ thống thanh toán dùng credit card qua GMO payment API viết bằng nodejs
 
+## Cách thực thi
+
+### Đăng kí tài khoản test
+Để bắt đầu làm việc với GMO API bạn cần phải đăng kí 1 tài khoản test qua https://service.gmo-pg.com/cyllene/entry/trialStart.htm
+Sau khi đăng kí bạn sẽ nhận được email gửi thông tin username, password cho màn hình quản lí Site và Shop. Ở đây có 2 khái niệm Site và Shop khi làm việc với  GMO  API.
+- Site là nơi quản lí thông tin của user như memberid, credit card info.
+- Shop là nơi quản lí thông các transaction khi thực hiện thanh toán với thông tin user ở trên. Mỗi thanh toán thành công sẽ trả về một giá trị orderId riêng. Ở màn hình quản lí Site có thể confirm status của thanh toán cũng như cancel thanh toán đó.
+
+Tiếp theo sẽ đi vào phần implement code
+
+### Tạo file config
+Đầu tiên cần tạo file config.json để lưu thông tin Site và Shop của hệ thống.
+Cần chia ra làm 2 phần tách biệt giữa 2 môi trường development và production.
+Thông tin về id và password trên development sẽ lấy được thông qua trang quản lí đã đăng kí ở trên trong phần Site management -> Site information và Site management -> Shop information.
+Lúc deploy hệ thống lên môi trường thật sẽ cần phải đăng kí để lấy thông tin Site và Shop mới dùng cho môi trường production.
 ```
-npm run prod:build
-npm run serve
-```
-
-Or simply:
-
-```
-npm run prod
-```
-
-If using Heroku, simply add a `Procfile` in the root directory. The
-[postinstall](postinstall.js) script will do the rest.
-
-```
-web: npm run serve
-```
-
-## Path Aliases
-
-In `package.json`, there is a property named `_moduleAliases`. This object
-defines the require() aliases used by both webpack and node.
-
-Aliased paths are prefixed with one of two symbols, which denote different
-things:
-
-`@` - component and template paths, e.g. `@components`
-
-`$` - server paths that are built by babel, e.g. `server/api`
-
-Aliases are nice to use for convenience, and lets us avoid using relative paths
-in our components:
-
-```
-// This sucks
-import SomeComponent from '../../../components/SomeComponent';
-
-// This is way better
-import SomeComponent from '@components/SomeComponent';
-```
-
-You can add additional aliases in `package.json` to your own liking.
-
-## Environment Variables
-
-In development mode, environment variables are loaded by `dotenv` off the `.env`
-file in your root directory. In production, you'll have to manage these
-yourself.
-
-An example with Heroku:
-
-```
-heroku config:set FOO=bar
-```
-
-## CSS Modules
-
-This project uses [CSS Modules](https://github.com/css-modules/css-modules).
-Class names should be in `camelCase`. Simply import the .scss file into your
-component, for example:
-
-```
-├── components
-│   ├── Header.js
-│   ├── Header.scss
-```
-
-```
-// Header.scss
-.headerContainer {
-  height: 100px;
-  width: 100%;
+{
+  "SHOP_CONFIG": {
+    "development": {
+      "id": "tshop00035429",
+      "host": "kt01.mul-pay.jp",
+      "password": "********"
+    },
+    "production": {
+      "id": "",
+      "host": "",
+      "password": ""
+    }
+  },
+  "SITE_CONFIG": {
+    "development": {
+      "id": "tsite00031571",
+      "host": "kt01.mul-pay.jp",
+      "password": "********"
+    },
+    "production": {
+      "id": "",
+      "host": "",
+      "password": ""
+    }
+  }
 }
 ```
 
+### Download package GMO for nodejs
+Việc kết nối với payment API trong các ngôn ngữ đa phần đều đã có các lib được xây dựng sẵn. Ở đây mình dùng lib gmo-payment-node để thao tác với GMO API.
+Download:
 ```
-// Header.js
-import css from './Header.scss';
+npm i --save gmo
+```
 
-const Header = (props) => {
-  return (
-    <div className={css.headerContainer}>
-      {...}
-    </div>
-  );
+### Tạo constructor class
+Tiếp theo tạo class để khởi tạo đối tượng GMO với config ở trên và thực hiện kết nối tới API.
+```
+import gmo from 'gmo';
+import co from 'co';
+import Q from 'q';
+import config from '@utils/gmo/config';
+
+const {
+  SHOP_CONFIG,
+  SITE_CONFIG,
+} = config;
+
+class GmoManager {
+  constructor() {
+    this.shop = new gmo.ShopAPI({
+      host: SHOP_CONFIG.host,
+      shop_id: SHOP_CONFIG.id,
+      shop_pass: SHOP_CONFIG.password,
+    });
+
+    this.site = new gmo.SiteAPI({
+      host: SITE_CONFIG.host,
+      site_id: SITE_CONFIG.id,
+      site_pass: SITE_CONFIG.password,
+    });
+  }
 }
 
+export default new GmoManager();
+```
+Những function phía dưới sẽ được khai báo ở trong class này.
+
+### Hàm searchMember
+Hàm này kiểm tra xem memberID đã được đăng kí trên site hay chưa.
+```
+/**
+ * Get Member Info。
+ */
+async searchMember(memberId /*number*/) {
+  const response = await co(async() => {
+    const result = await Q.ninvoke(this.site, 'searchMember', { member_id: memberId });
+
+    return {
+      status: true,
+      result,
+    };
+  }).catch((e) => {
+    // logger.system.error(`GMO[searchMember]: ${e}`);
+    return {
+      status: false,
+      error: e,
+    };
+  });
+
+  return response;
+}
 ```
 
-## Redux Devtools
-
-This project supports the awesome [Redux Devtools Extension](https://github.com/zalmoxisus/redux-devtools-extension).
-Install the Chrome or Firefox extension and it should just work.
-
-## Pre-fetching Data for Server Side Rendering (SSR)
-
-When rendering components on the server, you'll find that you may need to fetch
-some data before it can be rendered. The [component renderer](server/renderer/handler.js)
-looks for a `fetchData` method on the container component and its child
-components, then executes all of them and only renders after the promises have
-all been resolved.
-
+### Hàm saveMember
+Thực hiện đăng kí thông tin id và name của user
 ```
-//  As an ES6 class
+/**
+ * type GmoMember = {
+ *   member_id: number,
+ *   member_name: string,
+ * };
+ * register member to site。
+ * return error if existed
+ */
+async saveMember(member /* GmoMember */) {
+  const response = await co(async() => {
+    const result = await Q.ninvoke(this.site, 'saveMember', member);
 
-class TodosContainer extends React.Component {
-  static fetchData = ({ store }) => {
-    return store.dispatch(fetchTodos());
+    return {
+      status: true,
+      result,
+    };
+  }).catch((e) => {
+    // logger.system.error(`GMO[saveMember]: ${JSON.stringify(e)}`);
+    return {
+      status: false,
+      error: e,
+    };
+  });
+
+  return response;
+}
+```
+
+### Hàm saveCard
+Hàm này thực hiện việc lưu thông tin credit card của user.
+Nếu thông tin thẻ không hợp lệ sẽ trả về lỗi.
+```
+/*
+type Card = {
+  member_id: number,
+  card_no: string,
+  card_seq: string,
+  expire: string,
+};
+*/
+/**
+ * register and save card
+ */
+async saveCard(card /* Card */) {
+  const _card = card;
+  const response = await co(async() => {
+    const result = await Q.ninvoke(this.site, 'saveCard', _card);
+    return {
+      status: true,
+      result,
+    };
+  }).catch((e) => {
+    // logger.system.error(`GMO[saveCard]: ${JSON.stringify(e)}`);
+    return {
+      status: false,
+      error: e,
+    };
+  });
+
+  return response;
+}
+```
+
+### Hàm charge
+Thực hiện việc tạo một thanh toán.
+Sẽ trả về một orderId ngẫu nhiên nếu thanh toán thành công và error nếu thanh toán thất bại.
+```
+async charge(userId, price, tax, securityCode) {
+  const orderId = (`${userId}${Date.now()}${(`${Math.random()}`).replace('.', '')}`).substring(0, 20);
+
+  const shopEntryTran = {
+    order_id: orderId,
+    job_cd: 'CAPTURE',
+    amount: price,
+    tax,
   };
+
+  return co(async() => {
+    try {
+      const shopResponse = await Q.ninvoke(this.shop, 'entryTran', shopEntryTran);
+      const siteExecTran = {
+        access_id: shopResponse.AccessID,
+        access_pass: shopResponse.AccessPass,
+        order_id: orderId,
+        method: '1',
+        pay_times: '1',
+        member_id: userId,
+        seq_mode: '0',
+        card_seq: '0',
+        security_code: securityCode,
+      };
+      await Q.ninvoke(this.site, 'execTran', siteExecTran);
+    } catch (e) {
+      throw e;
+    }
+
+    return {
+      orderId,
+    };
+  }).catch((e) => {
+    // logger.system.error(`GMO[buyItem]: ${JSON.stringify(e)}`);
+    throw e;
+  });
 }
-
-// As a functional stateless component
-
-const TodosContainer = (props) => {
-  const { todos } = props;
-  return (
-    // ...component code
-  );
-}
-
-TodosContainer.fetchData = ({ store }) => {
-  return store.dispatch(fetchTodos());
-}
 ```
+Cụ thể hơn về đoạn code trên:
+- Tạo một giá trị orderID đảm bảo là duy nhất để phân biệt các thanh toán khác nhau
+- Gửi một requesst EntryTran tới SHOP API để đăng kí orderID, job_cd và price trong thanh toán lần này. (job_cd là CAPTURE có nghĩa là thực hiện trừ tiền ngay lập tức. tham khảo thêm về các loại job_cd ở reference (1)).
+- Dùng AccessID và AccessPass mà SHOP API trả về ở trên cộng với thông tin user để thực hiện thanh toán. Thông tin sẽ được gửi đến công ty cung cấp credit card.
 
-## Async / Await
+## Test
+Qui trình thực thi một thanh toán sau khi nhận được info từ phía client sẽ như sau:
+- gọi hàm searchMember để kiểm tra user đã đăng kí hay chưa
+- nếu chưa có thực hiện saveMember và saveCard để lưu thông tin lại
+- gọi hàm charge để thực hiện thanh toán và trả kết quả về client
 
-This project uses `async/await`, available by default in Node.js v8.x.x or
-higher. If you experience errors, please upgrade your version of Node.js.
+Lưu ý là ở môi trường development chỉ cần credit number thoả mãn luật Luhn (reference (3)) là có thể pass để thực hiện test nhưng trên môi trường production sẽ check chính xác là thẻ có hợp lệ ở hiện tại hay không.
 
-## Testing
+## Reference
+- http://ci.german-ex.com/gmo/index.html (1)
+- https://gist.github.com/jagdeepsingh/60c2322cccbf5f9a35d49b3a0c76267b (2)
+- https://vi.wikipedia.org/wiki/Lu%E1%BA%ADt_Luhn_Check_Digit (3)
 
-The default testing framework is Jest, though you can use whatever you want.
-
-Tests and their corresponding files such as Jest snapshots, should be co-located
-alongside the modules they are testing, in a `spec/` folder. For example:
-
-```
-├── components
-│   ├── todos
-│   │   ├── TodoForm
-│   │   │   ├── spec
-│   │   │   │   ├── TodoForm.test.js
-│   │   │   ├── index.js
-│   │   │   ├── index.scss
-```
-
-Tests can be written with ES2015, since it passes through `babel-register`.
-
-## Running Tests
-
-To run a single test:
-
-```
-npm test /path/to/single.test.js
-
-// Or, to watch for changes
-npm run test:watch /path/to/single.test.js
-```
-
-To run all tests:
-
-```
-npm run test:all
-
-// Or, to watch for changes
-npm run test:all:watch
-```
-
-## Running ESLint
-
-```
-npm run lint
-```
-
-Check the `.eslintignore` file for directories excluded from linting.
-
-## Changing the public asset path
-
-By default, assets are built into `dist/public`. This path is then served by
-express under the path `assets`. This is the public asset path. In a production
-scenario, you may want your assets to be hosted on a CDN. To do so, just change
-the `PUBLIC_ASSET_PATH` environment variant.
-
-Example using Heroku, if serving via CDN:
-
-```
-heroku config:set PUBLIC_ASSET_PATH=https://my.cdn.com
-```
-
-Example using Heroku, if serving locally:
-
-```
-heroku config:set PUBLIC_ASSET_PATH=/assets
-```
