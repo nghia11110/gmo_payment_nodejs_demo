@@ -21,10 +21,10 @@ npm start
 Direct your browser to `http://localhost:3000`.
 
 ## Giới thiệu
-GMO là cổng dịch vụ thanh toán lón của Nhật, hỗ trợ nhiều hình thức thanh toán (credit card, multipayment như pay-easy, convenience-store ...)
+GMO là cổng dịch vụ thanh toán lớn của Nhật, hỗ trợ nhiều hình thức thanh toán (credit card, multipayment như pay-easy, convenience-store ...)
 Về lí thuyết có thể tham khảo thêm ở https://viblo.asia/p/tim-hieu-ve-cong-thanh-toan-gmo-3P0lPvMpKox để hiểu rõ hơn cơ chế hoạt động của payment platform.
 
-Repo này sẽ hướng dẫn cách implement sample hệ thống thanh toán dùng credit card qua GMO payment API viết bằng nodejs
+Repo này sẽ hướng dẫn cách implement sample hệ thống thanh toán dùng credit card qua GMO payment API viết bằng nodejs.
 
 ## Cách thực thi
 
