@@ -5,6 +5,8 @@
 
 ## Development Mode
 
+![alt text](https://github.com/nghia11110/gmo_payment_nodejs_demo/blob/master/common/images/example.png)
+
 Copy environment variables and edit them if necessary:
 
 ```
