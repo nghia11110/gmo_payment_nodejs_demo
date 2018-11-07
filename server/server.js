@@ -37,7 +37,7 @@ app.use(
 );
 
 // Mount the REST API
-app.use('/api', Api);
+// app.use('/api', Api);
 
 // Mount the react render handler
 

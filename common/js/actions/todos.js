@@ -28,7 +28,7 @@ export const fetchTodos = () => {
     dispatch(fetchTodosRequest());
 
     return api
-      .get('/api/todos')
+      .get('/v1/todos')
       .then(todos => {
         dispatch(fetchTodosSuccess(todos));
 

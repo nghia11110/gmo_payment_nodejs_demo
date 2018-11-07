@@ -49,7 +49,8 @@ class GmoPaymentContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  gmoPayments: state.gmoPayments
+  gmoPayments: state.gmoPayments,
+  todos: state.todos
 });
 
 export default connect(mapStateToProps)(GmoPaymentContainer);
