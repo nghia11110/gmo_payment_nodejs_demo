@@ -29,7 +29,8 @@ export const fetchTodos = () => {
 
     return api
       .get('/v1/todos')
-      .then(todos => {
+      .then(res => {
+        const { todos } = res;
         dispatch(fetchTodosSuccess(todos));
 
         return Promise.resolve(todos);
